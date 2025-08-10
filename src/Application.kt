@@ -38,17 +38,20 @@ data class Tags(
 )
 
 fun main() = runBlocking {
+    val districtName = "Quận 1"
+    val streetName = "Nguyễn Đình Chiểu"
+
     val query = """
         [out:json][timeout:90];
-        area["type"="boundary"]["name"="Quận 5"]->.district;
-        relation(area.district)["admin_level"="6"];
+        area["type"="boundary"]["name"="$districtName"]->.district;
+        relation(area.district)["admin_level"="6"]["boundary"="administrative"];
         out geom;
     """.trimIndent()
 
     val query2 = """   
         [out:json][timeout:90];
-        area["type"="boundary"]["name"="Quận 5"]->.district;    
-        way(area.district)["name"~"Trần Hưng Đạo"]["name"!~"Hẻm"];
+        area["type"="boundary"]["name"="$districtName"]->.district;    
+        way(area.district)["name"~"$streetName"]["name"!~"Hẻm"];
         out geom;
     """.trimIndent()
 
@@ -107,7 +110,7 @@ fun main() = runBlocking {
         }
 
         if (hasIntersect) {
-            println("Đường Trần Hưng Đạo có đi qua ${ward.tags.name}")
+            println("Đường $streetName - $districtName có đi qua ${ward.tags.name}")
         }
     }
 }
